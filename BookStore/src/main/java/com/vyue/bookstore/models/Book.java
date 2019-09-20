@@ -8,37 +8,54 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-//@ApiModel(value = "Book", description = "The Book Entity")
+@ApiModel(value = "Book", description = "The Book Entity")
 @Entity
-@Table(name = "book")
+@Table(name = "books")
 public class Book extends Auditable
 {
-//	@ApiModelProperty(name = "bookid", value = "primary key for Book",
-//					  required = true, example = "1")
+	// fields
+	@ApiModelProperty(name = "bookid", value = "primary key for Book",
+					  required = true, example = "1")
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long bookid;
 
-	private String booktitle;
+	@ApiModelProperty(name = "title", value = "title of Book",
+					  required = true, example = "Harry Potter")
+	private String title;
+
+	@ApiModelProperty(name = "ISBN", value = "ISBN of Book",
+					  required = true, example = "123123123")
 	private String ISBN;
+
+	@ApiModelProperty(name = "copy", value = "copyright year of Book",
+					  required = true, example = "2019")
+//	@Column(nullable = true)
 	private int copy;
 
-	// many books to authors
-	@ManyToMany(mappedBy ="books")
+	// many to many relationship declaration
+	@ApiModelProperty(name = "authors", value = "List of Authors")
+	@ManyToMany
+	@JoinTable(name = "wrote",
+			   joinColumns = {@JoinColumn(name = "bookid")},
+			   inverseJoinColumns = {@JoinColumn(name = "authorid")})
 	@JsonIgnoreProperties("books")
 	private List<Authors> authors = new ArrayList<>();
 
+	// default constructor
 	public Book()
 	{
 	}
 
-	public Book(String booktitle, String ISBN, int copy)
+	// constructor with params
+	public Book(String title, String ISBN, int copy)
 	{
-		this.booktitle = booktitle;
+		this.title = title;
 		this.ISBN = ISBN;
 		this.copy = copy;
 	}
 
+	// getters and setters
 	public long getBookid()
 	{
 		return bookid;
@@ -49,14 +66,14 @@ public class Book extends Auditable
 		this.bookid = bookid;
 	}
 
-	public String getBooktitle()
+	public String getTitle()
 	{
-		return booktitle;
+		return title;
 	}
 
-	public void setBooktitle(String booktitle)
+	public void setTitle(String title)
 	{
-		this.booktitle = booktitle;
+		this.title = title;
 	}
 
 	public String getISBN()

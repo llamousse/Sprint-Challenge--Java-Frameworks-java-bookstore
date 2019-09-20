@@ -8,36 +8,48 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-//@ApiModel(value = "Authors", description = "The Authors Entity")
+@ApiModel(value = "Authors", description = "The Authors Entity")
 @Entity
-@Table(name = "author")
+@Table(name = "authors")
 public class Authors extends Auditable
 {
-//	@ApiModelProperty(name = "authorid", value = "primary key for Authors",
-//					  required = true, example = "1")
+	// fields
+	@ApiModelProperty(name = "authorid", value = "primary key for Authors",
+					  required = true, example = "1")
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long authorid;
 
-	private String lastname;
-	private String firstname;
+	@ApiModelProperty(name = "lname", value = "last name of Author",
+					  required = true, example = "Jane")
+	private String lname;
 
-	// many authors to many books
-//	@ApiModelProperty(name = "books", value = "List of Books")
+	@ApiModelProperty(name = "fname", value = "first name of Author",
+					  required = true, example = "Will")
+	private String fname;
+
+	// many to many relationship declaration
+	@ApiModelProperty(name = "book", value = "List of Books")
 	@ManyToMany
+	@JoinTable(name = "authors",
+			   joinColumns = {@JoinColumn(name = "authorid")},
+			   inverseJoinColumns = {@JoinColumn(name = "bookid")})
 	@JsonIgnoreProperties("authors")
 	private List<Book> books = new ArrayList<>();
 
+	// default constructor
 	public Authors()
 	{
 	}
 
-	public Authors(String lastname, String firstname)
+	// constructor with params
+	public Authors(String lname, String fname)
 	{
-		this.lastname = lastname;
-		this.firstname = firstname;
+		this.lname = lname;
+		this.fname = fname;
 	}
 
+	// getters and setters
 	public long getAuthorid()
 	{
 		return authorid;
@@ -48,24 +60,24 @@ public class Authors extends Auditable
 		this.authorid = authorid;
 	}
 
-	public String getLastname()
+	public String getLname()
 	{
-		return lastname;
+		return lname;
 	}
 
-	public void setLastname(String lastname)
+	public void setLname(String lname)
 	{
-		this.lastname = lastname;
+		this.lname = lname;
 	}
 
-	public String getFirstname()
+	public String getFname()
 	{
-		return firstname;
+		return fname;
 	}
 
-	public void setFirstname(String firstname)
+	public void setFname(String fname)
 	{
-		this.firstname = firstname;
+		this.fname = fname;
 	}
 
 	public List<Book> getBooks()
