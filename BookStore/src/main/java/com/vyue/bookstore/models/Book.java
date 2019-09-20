@@ -2,6 +2,7 @@ package com.vyue.bookstore.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -10,8 +11,10 @@ import java.util.List;
 //@ApiModel(value = "Book", description = "The Book Entity")
 @Entity
 @Table(name = "book")
-public class Book
+public class Book extends Auditable
 {
+//	@ApiModelProperty(name = "bookid", value = "primary key for Book",
+//					  required = true, example = "1")
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long bookid;
@@ -20,6 +23,7 @@ public class Book
 	private String ISBN;
 	private int copy;
 
+	// many books to authors
 	@ManyToMany(mappedBy ="books")
 	@JsonIgnoreProperties("books")
 	private List<Authors> authors = new ArrayList<>();
@@ -28,9 +32,11 @@ public class Book
 	{
 	}
 
-	public Book(String booktitle)
+	public Book(String booktitle, String ISBN, int copy)
 	{
 		this.booktitle = booktitle;
+		this.ISBN = ISBN;
+		this.copy = copy;
 	}
 
 	public long getBookid()
